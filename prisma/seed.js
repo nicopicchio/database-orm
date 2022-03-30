@@ -27,15 +27,19 @@ async function seed() {
 			title: 'Interstellar',
 			runTimeMins: 169,
 			screening: {
-				create: {
-					startsAt: date,
-				},
+				create: [
+					{
+						startsAt: date,
+					},
+				],
 			},
 		},
 		include: {
 			screening: true,
 		},
 	});
+
+	console.log('Movie created', createdMovie);
 
 	// Don't edit any of the code below this line
 	process.exit(0);
