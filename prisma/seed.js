@@ -20,7 +20,7 @@ async function seed() {
 
 	console.log('Customer created', createdCustomer);
 
-	// Add your code hereclaer
+	// Add your code here
 
 	const createdMovie = await prisma.movie.create({
 		data: {
@@ -30,6 +30,11 @@ async function seed() {
 				create: [
 					{
 						startsAt: date,
+						screen: {
+							create: {
+								number: 1,
+							},
+						},
 					},
 				],
 			},
@@ -40,6 +45,27 @@ async function seed() {
 	});
 
 	console.log('Movie created', createdMovie);
+
+	const createdScreen = await prisma.screen.create({
+		data: {
+			number: 1,
+			screening: {
+				create: [
+					{
+						startsAt: date,
+						movie: {
+							create: {
+								title: 'Interstellar',
+								runTimeMins: 169,
+							},
+						},
+					},
+				],
+			},
+		},
+	});
+
+	console.log('Screen created', createdScreen);
 
 	// Don't edit any of the code below this line
 	process.exit(0);
