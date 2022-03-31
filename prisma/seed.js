@@ -13,9 +13,6 @@ async function seed() {
 				},
 			},
 		},
-		include: {
-			contact: true,
-		},
 	});
 
 	console.log('Customer created', createdCustomer);
@@ -26,21 +23,6 @@ async function seed() {
 		data: {
 			title: 'Interstellar',
 			runTimeMins: 169,
-			screening: {
-				create: [
-					{
-						startsAt: date,
-						screen: {
-							create: {
-								number: 1,
-							},
-						},
-					},
-				],
-			},
-		},
-		include: {
-			screening: true,
 		},
 	});
 
@@ -49,23 +31,45 @@ async function seed() {
 	const createdScreen = await prisma.screen.create({
 		data: {
 			number: 1,
-			screening: {
-				create: [
-					{
-						startsAt: date,
-						movie: {
-							create: {
-								title: 'Interstellar',
-								runTimeMins: 169,
-							},
-						},
-					},
-				],
-			},
 		},
 	});
 
 	console.log('Screen created', createdScreen);
+
+	const createdScreening = await prisma.screening.create({
+		data: {
+			startsAt: date,
+			screen: {
+				connect: {
+					id: createdScreen.id,
+				},
+			},
+			movie: {
+				connect: {
+					id: createdMovie.id,
+				},
+			},
+		},
+	});
+
+	console.log('Screening created', createdScreening);
+
+	const createdTicket = await prisma.ticket.create({
+		data: {
+			screening: {
+				connect: {
+					id: createdScreening.id,
+				},
+			},
+			customer: {
+				connect: {
+					id: createdCustomer.id,
+				},
+			},
+		},
+	});
+
+	console.log('Ticket created', createdTicket);
 
 	// Don't edit any of the code below this line
 	process.exit(0);
